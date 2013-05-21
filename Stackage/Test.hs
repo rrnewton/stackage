@@ -107,8 +107,12 @@ runTestSuite settings testdir (packageName, SelectedPackageInfo {..}) = do
     if passed
         then do
             removeFile logfile
-            when expectedFailure $ putStrLn $ package ++ " passed, but I didn't think it would."
-        else unless expectedFailure $ putStrLn $ concat
+            if expectedFailure
+              then putStrLn $ package ++ " passed, but I didn't think it would."
+              else putStrLn $ package ++ " passed."
+        else if expectedFailure
+             then putStrLn $ package ++ " failed, expected."
+             else putStrLn $ concat
                 [ "Test suite failed: "
                 , package
                 , "("
